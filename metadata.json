@@ -1,0 +1,5 @@
+{
+  "name": "Product Scout AI",
+  "description": "An AI-powered application for product sourcing and research. It helps users search across multiple online marketplaces, optimize product titles, analyze competition, and find potential suppliers using the power of Google's Gemini AI.",
+  "requestFramePermissions": []
+}
