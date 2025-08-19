@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 export const Logo2DStudio: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricRef = useRef<any | null>(null);
+  const fabricNsRef = useRef<any | null>(null);
   const [text, setText] = useState('Your Brand');
 
   useEffect(() => {
@@ -12,6 +13,7 @@ export const Logo2DStudio: React.FC = () => {
       const mod = await import('fabric');
       // Support both default and named export patterns
       const fabricAny: any = (mod as any).fabric || (mod as any).default || mod;
+      fabricNsRef.current = fabricAny;
       const canvas = new fabricAny.Canvas(canvasRef.current, { backgroundColor: '#0f172a' });
       if (disposed) {
         canvas.dispose();
@@ -42,14 +44,15 @@ export const Logo2DStudio: React.FC = () => {
 
   const addShape = () => {
     if (!fabricRef.current) return;
-    const FabricCtor = (fabricRef.current as any).constructor;
-    const rect = new FabricCtor.Rect({ left: 180, top: 120, width: 80, height: 80, fill: '#22c55e', rx: 8, ry: 8 });
+    const FabricNs = fabricNsRef.current || (fabricRef.current as any).constructor;
+    const rect = new FabricNs.Rect({ left: 180, top: 120, width: 80, height: 80, fill: '#22c55e', rx: 8, ry: 8 });
     fabricRef.current.add(rect);
   };
 
   const addText = () => {
     if (!fabricRef.current) return;
-    const t = new (fabricRef.current as any).constructor.IText(text, { left: 80, top: 240, fill: '#eab308', fontFamily: 'Inter', fontSize: 36 });
+    const FabricNs = fabricNsRef.current || (fabricRef.current as any).constructor;
+    const t = new FabricNs.IText(text, { left: 80, top: 240, fill: '#eab308', fontFamily: 'Inter', fontSize: 36 });
     fabricRef.current.add(t);
   };
 
